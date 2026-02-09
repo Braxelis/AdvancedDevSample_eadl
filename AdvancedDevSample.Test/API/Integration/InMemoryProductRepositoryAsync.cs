@@ -1,4 +1,9 @@
-﻿using AdvancedDevSample.Domain.Entities;
+// Ancienne implémentation de repository async utilisée par des tests d'intégration obsolètes.
+// Désactivée pour le moment afin de simplifier le projet et éviter les erreurs de compilation
+// liées à des types qui n'existent plus (IProductRepositoryAsync, Product2, etc.).
+
+#if false
+using AdvancedDevSample.Domain.Entities;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,3 +32,4 @@ namespace AdvancedDevSample.Api.Tests.Integration
         }
     }
 }
+#endif

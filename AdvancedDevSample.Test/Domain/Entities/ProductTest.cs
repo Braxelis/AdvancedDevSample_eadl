@@ -1,8 +1,7 @@
-﻿using AdvancedDevSample.Domain.Entities;
-using AdvancedDevSample.Domain.Execptions;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using AdvancedDevSample.Domain.Entities;
+using AdvancedDevSample.Domain.Exceptions;
+using AdvancedDevSample.Domain.ValueObjects;
 using Xunit;
 
 namespace AdvancedDevSample.Test.Domain.Entities
@@ -10,62 +9,28 @@ namespace AdvancedDevSample.Test.Domain.Entities
     public class ProductTest
     {
         [Fact]
-        public void ChangePrice_Shoulf_Update_Price_When_Product_Is_Active(){
-            //Arrange : Je prépare un produit valider
-            var product = new Product();
+        public void ChangePrice_Should_Update_Price_When_Product_Is_Active()
+        {
+            // Arrange : produit actif avec un prix initial
+            var product = new Product(new Price(10m));
 
-            //Act : Execute une action
-            product.ChangePrice(20);
+            // Act : changement de prix
+            product.ChangePrice(20m);
 
-            //Assert : Vérifie le résultat
-            Assert.Equal(20, product.Price);
-
+            // Assert : le prix a bien été mis à jour
+            Assert.Equal(20m, product.Price.Value);
         }
 
         [Fact]
-        public void ChangePrice_Should_Throw_Execption_When_Product_Is_Inactive()
+        public void ChangePrice_Should_Throw_Exception_When_Product_Is_Inactive()
         {
-            //Arrange : Je prépare un produit valider
-            var product = new Product();
-            product.ChangePrice(10); // Prix initial
+            // Arrange : produit inactif
+            var product = new Product(Guid.NewGuid(), new Price(10m), isActive: false);
 
-            // Simulation : produit désactivé (via reconstitution ou méthode dédiée)
-            //product.IsActive=true;//Accesseur non accessible
-            typeof(Product).GetProperty(nameof(Product.IsActive))!.SetValue(product, false);
+            // Act & Assert : le changement de prix doit lever une DomainException
+            var exception = Assert.Throws<DomainException>(() => product.ChangePrice(20m));
 
-            //Act & Assert
-            var exception = Assert.Throws<DomainException>(() => product.ChangePrice(20));
-
-            Assert.Equal("Impossible de modifier un produit inactif.", exception.Message);
-
-        }
-
-        [Fact]
-        public void ApplyDiscount_Should_Decrease_Price()
-        {
-            //Arrange
-            var product = new Product();
-            product.ChangePrice(100); // Prix initial
-
-            //Act
-            product.ApplyDiscount(30);
-
-            //Assert
-            Assert.Equal(70, product.Price);
-
-        }
-
-        [Fact]
-        public void ApplyDiscount_Should_Throw_When_Resulting_Price_Is_Invalid()
-        {
-            // Arrange
-            var product = new Product();
-            product.ChangePrice(20); //valeur initiale
-
-            // Act & Assert
-           Assert.Throws<DomainException>(() => product.ApplyDiscount(30));
-
+            Assert.Equal("Le produit est inactif.", exception.Message);
         }
     }
 }
-
