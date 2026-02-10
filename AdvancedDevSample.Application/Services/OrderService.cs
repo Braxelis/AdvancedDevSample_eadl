@@ -11,15 +11,18 @@ namespace AdvancedDevSample.Domain.Services
 {
     /// <summary>
     /// Service applicatif pour gérer les commandes.
-    /// Il orchestre le domaine (Order, OrderLine, Price) et la persistance (IOrderRepository).
+    /// Il orchestre le domaine (Order, OrderLine, Price) et la persistance (IOrderRepository),
+    /// en récupérant les informations de produits via IProductRepository.
     /// </summary>
     public class OrderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IProductRepository _productRepository;
 
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(IOrderRepository orderRepository, IProductRepository productRepository)
         {
             _orderRepository = orderRepository;
+            _productRepository = productRepository;
         }
 
         public OrderDto Create(CreateOrderRequest? request = null)
@@ -38,8 +41,15 @@ namespace AdvancedDevSample.Domain.Services
         public void AddLine(Guid orderId, AddOrderLineRequest request)
         {
             var order = GetOrder(orderId);
-            var price = new Price(request.UnitPrice);
-            order.AddLine(request.ProductId, request.Quantity, price);
+            var product = GetProduct(request.ProductId);
+
+            if (!product.IsActive)
+            {
+                throw new DomainException("Impossible d'ajouter un produit inactif à une commande.");
+            }
+
+            var price = product.Price; // Price value object du domaine
+            order.AddLine(product.Id, request.Quantity, price);
             _orderRepository.Save(order);
         }
 
@@ -75,6 +85,12 @@ namespace AdvancedDevSample.Domain.Services
         {
             return _orderRepository.GetById(id)
                    ?? throw new ApplicationServiceException("Commande non trouvée.");
+        }
+
+        private Product GetProduct(Guid id)
+        {
+            return _productRepository.GetById(id)
+                   ?? throw new ApplicationServiceException("Produit non trouvé.");
         }
 
         private static OrderDto MapToDto(Order order)
