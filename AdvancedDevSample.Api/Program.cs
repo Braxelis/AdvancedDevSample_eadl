@@ -30,6 +30,10 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<IProductRepository, EfProductRepository>();
 builder.Services.AddScoped<ProductService>();
 
+// Dépendances pour les commandes
+builder.Services.AddScoped<IOrderRepository, InMemoryOrderRepository>();
+builder.Services.AddScoped<OrderService>();
+
 
 var app = builder.Build();
 
