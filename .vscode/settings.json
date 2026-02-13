@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "braxelis",
+        "projectKey": "Braxelis_AdvancedDevSample_eadl"
+    }
+}

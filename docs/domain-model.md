@@ -125,7 +125,7 @@ Représente une ligne de commande : produit + quantité + prix unitaire.
 
 ## Diagramme de classes
 
-![Diagramme de classes du domaine](images/domain-model-class-diagram.png)
+![Diagramme de classes du domaine](images/domain-model-class-diagram.jpg)
 
 Le diagramme ci-dessus illustre les entités principales du domaine et leurs relations :
 

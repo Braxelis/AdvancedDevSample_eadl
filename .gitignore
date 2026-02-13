@@ -2,3 +2,14 @@
 [Bb]in/
 [Oo]bj/
 *.user
+
+# SonarQube/SonarCloud
+.sonarqube/
+.sonar/
+sonar-project.local.properties
+
+# Secrets and local configuration
+*.local.*
+.env
+.env.local
+secrets.json

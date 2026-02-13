@@ -28,7 +28,7 @@ namespace AdvancedDevSample.Infrastructure.Repositories
 
             if (entity is null)
             {
-                return null;
+                throw new KeyNotFoundException($"Product with ID {id} not found.");
             }
 
             return entity.ToDomain();
