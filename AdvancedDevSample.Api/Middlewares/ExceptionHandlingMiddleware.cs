@@ -38,7 +38,7 @@ namespace AdvancedDevSample.Api.Middlewares
             catch (ApplicationServiceException ex)
             {
                _logger.LogError(ex, "Erreur applicative.");
-                context.Response.StatusCode = (int)ex.StatusCode;
+                context.Response.StatusCode = ex.StatusCode;
                 await context.Response.WriteAsJsonAsync(
                            new { title = "Ressource introuvable", detail = ex.Message });
             }

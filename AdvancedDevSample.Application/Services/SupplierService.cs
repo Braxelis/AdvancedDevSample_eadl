@@ -55,7 +55,8 @@ namespace AdvancedDevSample.Application.Services
         // --------- Cas d'usage : Supprimer un fournisseur ---------
         public void Delete(Guid id)
         {
-            var supplier = GetSupplier(id);
+            // Vérifier que le fournisseur existe avant de le supprimer
+            GetSupplier(id);
             _repo.Remove(id);
         }
 

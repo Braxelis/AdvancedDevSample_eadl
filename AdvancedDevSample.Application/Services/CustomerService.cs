@@ -55,7 +55,8 @@ namespace AdvancedDevSample.Application.Services
         // --------- Cas d'usage : Supprimer un client ---------
         public void Delete(Guid id)
         {
-            var customer = GetCustomer(id);
+            // Vérifier que le client existe avant de le supprimer
+            GetCustomer(id);
             _repo.Remove(id);
         }
 

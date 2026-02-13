@@ -109,7 +109,7 @@ namespace AdvancedDevSample.Domain.Entities
             {
                 // Pattern simple pour valider l'email
                 var emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-                return Regex.IsMatch(email, emailPattern, RegexOptions.IgnoreCase);
+                return Regex.IsMatch(email, emailPattern, RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(100));
             }
             catch
             {
