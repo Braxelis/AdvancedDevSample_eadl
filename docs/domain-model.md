@@ -125,55 +125,140 @@ Représente une ligne de commande : produit + quantité + prix unitaire.
 
 ## Diagramme de classes
 
+```mermaid
+classDiagram
+    class Product {
+        +Guid Id
+        +Price Price
+        +bool IsActive
+        +Guid? SupplierId
+        +ChangePrice(Price)
+        +Activate()
+        +Deactivate()
+        +SetSupplier(Guid?)
+    }
+    
+    class Order {
+        +Guid Id
+        +OrderStatus Status
+        +DateTime CreatedAt
+        +decimal Total
+        +Guid? CustomerId
+        +IReadOnlyCollection~OrderLine~ Lines
+        +AddLine(Guid, int, Price)
+        +RemoveLine(Guid)
+        +ChangeQuantity(Guid, int)
+        +Confirm()
+        +Cancel()
+        +SetCustomer(Guid?)
+    }
+    
+    class OrderLine {
+        +Guid ProductId
+        +int Quantity
+        +Price UnitPrice
+        +decimal LineTotal
+    }
+    
+    class Price {
+        <<value object>>
+        +decimal Value
+        +ToString()
+    }
+    
+    class Customer {
+        +Guid Id
+        +string Name
+        +string Email
+        +string? Phone
+        +string? Address
+        +bool IsActive
+        +UpdateContactInfo()
+        +Activate()
+        +Deactivate()
+    }
+    
+    class Supplier {
+        +Guid Id
+        +string Name
+        +string Email
+        +string? Phone
+        +string? Address
+        +bool IsActive
+        +UpdateContactInfo()
+        +Activate()
+        +Deactivate()
+    }
+    
+    class OrderStatus {
+        <<enumeration>>
+        Draft
+        Confirmed
+        Cancelled
+    }
+    
+    Product "1" --> "1" Price : has
+    Product "*" --> "0..1" Supplier : supplied by
+    Order "1" *-- "*" OrderLine : contains
+    Order "1" --> "1" OrderStatus : has
+    Order "*" --> "0..1" Customer : placed by
+    OrderLine "1" --> "1" Price : has
+    OrderLine "*" --> "1" Product : references
 ```
-┌─────────────┐
-│   Product   │
-├─────────────┤
-│ + Id        │
-│ + Price     │───┐
-│ + IsActive  │   │
-└─────────────┘   │
-                  │
-┌─────────────┐   │    ┌──────────┐
-│    Order    │   │    │  Price   │
-├─────────────┤   │    ├──────────┤
-│ + Id        │   └───▶│ + Value  │
-│ + Lines     │───┐    └──────────┘
-│ + Status    │   │
-│ + CreatedAt │   │
-│ + Total     │   │
-└─────────────┘   │
-                  │
-                  │    ┌─────────────┐
-                  └───▶│ OrderLine   │
-                       ├─────────────┤
-                       │ + ProductId │
-                       │ + Quantity  │
-                       │ + UnitPrice │───┐
-                       │ + LineTotal │   │
-                       └─────────────┘   │
-                                         │
-┌─────────────┐                          │
-│  Customer   │                          │
-├─────────────┤                          │
-│ + Id        │                          │
-│ + Name      │                          │
-│ + Email     │                          │
-│ + Phone     │                          │
-│ + Address   │                          │
-│ + IsActive  │                          │
-└─────────────┘                          │
-                                         │
-┌─────────────┐                          │
-│  Supplier   │                          │
-├─────────────┤                          │
-│ + Id        │                          │
-│ + Name      │                          │
-│ + Email     │                          │
-│ + Phone     │                          │
-│ + Address   │                          │
-│ + IsActive  │                          │
-└─────────────┘                          │
+
+## Diagramme d'état-transition - Cycle de vie d'une commande
+
+```mermaid
+stateDiagram-v2
+    [*] --> Draft: Créer commande
+    
+    Draft --> Draft: Ajouter ligne
+    Draft --> Draft: Modifier quantité
+    Draft --> Draft: Supprimer ligne
+    Draft --> Draft: Assigner client
+    
+    Draft --> Confirmed: Confirmer\n(si lignes > 0)
+    Draft --> Cancelled: Annuler
+    
+    Confirmed --> Cancelled: Annuler
+    
+    Cancelled --> [*]
+    Confirmed --> [*]
+    
+    note right of Draft
+        État modifiable
+        Peut ajouter/modifier/supprimer des lignes
+    end note
+    
+    note right of Confirmed
+        État immuable
+        Ne peut plus être modifiée
+    end note
+    
+    note right of Cancelled
+        État final
+        Commande annulée
+    end note
+```
+
+## Diagramme d'activité - Processus de confirmation de commande
+
+```mermaid
+flowchart TD
+    Start([Demande de confirmation]) --> CheckStatus{Commande\nen Draft?}
+    
+    CheckStatus -->|Non| Error1[Erreur: Commande\nnon modifiable]
+    Error1 --> End([Fin])
+    
+    CheckStatus -->|Oui| CheckLines{Commande\ncontient des lignes?}
+    
+    CheckLines -->|Non| Error2[Erreur: Commande vide]
+    Error2 --> End
+    
+    CheckLines -->|Oui| ChangeStatus[Changer statut\nà Confirmed]
+    ChangeStatus --> SaveOrder[Sauvegarder\nla commande]
+    SaveOrder --> Success[Succès]
+    Success --> End
 ```
 
 ## Règles métier

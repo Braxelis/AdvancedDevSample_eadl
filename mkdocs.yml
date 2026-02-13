@@ -55,8 +55,14 @@ nav:
   - Architecture:
       - Vue d'ensemble: architecture.md
       - Modèle de domaine: domain-model.md
+  - Sécurité: security.md
+  - Qualité:
+      - Métriques et analyse: quality.md
+      - Installation SonarQube: sonarqube-setup.md
+      - Intégration SonarCloud: sonarcloud-setup.md
   - Référence API:
       - Introduction: api-reference.md
+      - Authentification: api/auth.md
       - Produits: api/products.md
       - Commandes: api/orders.md
       - Clients: api/customers.md

@@ -1,8 +1,11 @@
 using AdvancedDevSample.Api.Middlewares;
 using System;
 using System.IO;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using AdvancedDevSample.Application.Services;
 using AdvancedDevSample.Domain.Interfaces; // Ajouté pour IProductRepository
 using AdvancedDevSample.Infrastructure.Repositories; // Ajouté pour EfProductRepository
@@ -42,6 +45,37 @@ builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<ISupplierRepository, InMemorySupplierRepository>();
 builder.Services.AddScoped<SupplierService>();
 
+// Dépendances pour l'authentification
+builder.Services.AddScoped<IUserRepository, InMemoryUserRepository>();
+builder.Services.AddScoped<AuthService>();
+
+// Configuration de l'authentification JWT
+var jwtKey = builder.Configuration["Jwt:Key"] 
+    ?? throw new InvalidOperationException("JWT Key non configurée.");
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
+
+builder.Services.AddAuthorization();
+
 
 var app = builder.Build();
 
@@ -55,6 +89,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Middleware personnalisé pour la gestion des erreurs
