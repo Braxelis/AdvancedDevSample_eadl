@@ -1,0 +1,66 @@
+site_name: AdvancedDevSample - Documentation
+site_description: Documentation complète du projet AdvancedDevSample - Système de gestion de catalogue de produits avec DDD
+site_author: EADL1
+repo_url: https://github.com/Braxelis/AdvancedDevSample_eadl
+repo_name: Braxelis/AdvancedDevSample_eadl
+
+theme:
+  name: material
+  language: fr
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Passer au mode sombre
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Passer au mode clair
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search:
+      lang: fr
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Accueil: index.md
+  - Guide de démarrage: getting-started.md
+  - Architecture:
+      - Vue d'ensemble: architecture.md
+      - Modèle de domaine: domain-model.md
+  - Référence API:
+      - Introduction: api-reference.md
+      - Produits: api/products.md
+      - Commandes: api/orders.md
+      - Clients: api/customers.md
+      - Fournisseurs: api/suppliers.md
+  - Développement:
+      - Guide de développement: development.md
+      - Tests: testing.md

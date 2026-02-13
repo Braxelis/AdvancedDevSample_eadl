@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using AdvancedDevSample.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Net; 

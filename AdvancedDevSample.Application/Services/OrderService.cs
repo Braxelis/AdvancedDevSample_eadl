@@ -7,7 +7,7 @@ using AdvancedDevSample.Domain.Exceptions;
 using AdvancedDevSample.Domain.Interfaces;
 using AdvancedDevSample.Domain.ValueObjects;
 
-namespace AdvancedDevSample.Domain.Services
+namespace AdvancedDevSample.Application.Services
 {
     /// <summary>
     /// Service applicatif pour gérer les commandes.
@@ -27,7 +27,7 @@ namespace AdvancedDevSample.Domain.Services
 
         public OrderDto Create(CreateOrderRequest? request = null)
         {
-            var order = new Order();
+            var order = new Order(request?.CustomerId);
             _orderRepository.Add(order);
             return MapToDto(order);
         }
@@ -111,6 +111,7 @@ namespace AdvancedDevSample.Domain.Services
                 Status = order.Status.ToString(),
                 CreatedAt = order.CreatedAt,
                 Total = order.Total,
+                CustomerId = order.CustomerId,
                 Lines = lineDtos
             };
         }

@@ -7,7 +7,7 @@ using AdvancedDevSample.Domain.Interfaces;
 using AdvancedDevSample.Domain.ValueObjects;
 using AdvancedDevSample.Application.DTOs;
 
-namespace AdvancedDevSample.Domain.Services
+namespace AdvancedDevSample.Application.Services
 {
     public class ProductService
     {
@@ -38,7 +38,7 @@ namespace AdvancedDevSample.Domain.Services
         public ProductDto Create(CreateProductRequest request)
         {
             var price = new Price(request.InitialPrice);
-            var product = new Product(price); // actif par défaut
+            var product = new Product(price, request.SupplierId); // actif par défaut
 
             _repo.Add(product);
 
@@ -80,7 +80,8 @@ namespace AdvancedDevSample.Domain.Services
             {
                 Id = product.Id,
                 Price = product.Price.Value,
-                IsActive = product.IsActive
+                IsActive = product.IsActive,
+                SupplierId = product.SupplierId
             };
     }
 }

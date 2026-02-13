@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using AdvancedDevSample.Domain.Services;
+using AdvancedDevSample.Application.Services;
 using AdvancedDevSample.Domain.Interfaces; // Ajouté pour IProductRepository
 using AdvancedDevSample.Infrastructure.Repositories; // Ajouté pour EfProductRepository
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -33,6 +33,14 @@ builder.Services.AddScoped<ProductService>();
 // Dépendances pour les commandes
 builder.Services.AddScoped<IOrderRepository, InMemoryOrderRepository>();
 builder.Services.AddScoped<OrderService>();
+
+// Dépendances pour les clients
+builder.Services.AddScoped<ICustomerRepository, InMemoryCustomerRepository>();
+builder.Services.AddScoped<CustomerService>();
+
+// Dépendances pour les fournisseurs
+builder.Services.AddScoped<ISupplierRepository, InMemorySupplierRepository>();
+builder.Services.AddScoped<SupplierService>();
 
 
 var app = builder.Build();

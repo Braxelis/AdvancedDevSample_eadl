@@ -26,14 +26,17 @@ namespace AdvancedDevSample.Domain.Entities
 
         public decimal Total => _lines.Sum(l => l.LineTotal);
 
-        public Order(Guid id)
+        public Guid? CustomerId { get; private set; } // Relation optionnelle vers un client
+
+        public Order(Guid id, Guid? customerId = null)
         {
             Id = id == Guid.Empty ? Guid.NewGuid() : id;
             Status = OrderStatus.Draft;
             CreatedAt = DateTime.UtcNow;
+            CustomerId = customerId;
         }
 
-        public Order() : this(Guid.NewGuid())
+        public Order(Guid? customerId = null) : this(Guid.NewGuid(), customerId)
         {
         }
 
@@ -98,6 +101,12 @@ namespace AdvancedDevSample.Domain.Entities
             }
 
             Status = OrderStatus.Confirmed;
+        }
+
+        public void SetCustomer(Guid? customerId)
+        {
+            EnsureIsMutable();
+            CustomerId = customerId;
         }
 
         public void Cancel()

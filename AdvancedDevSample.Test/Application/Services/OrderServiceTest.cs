@@ -1,6 +1,6 @@
 using System;
 using AdvancedDevSample.Application.DTOs;
-using AdvancedDevSample.Domain.Services;
+using AdvancedDevSample.Application.Services;
 using AdvancedDevSample.Test.Application.Fakes;
 
 namespace AdvancedDevSample.Test.Application.Services

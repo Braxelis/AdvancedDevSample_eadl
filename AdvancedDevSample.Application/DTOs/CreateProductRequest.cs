@@ -9,5 +9,7 @@ namespace AdvancedDevSample.Application.DTOs
     {
         [Range(0.01, double.MaxValue, ErrorMessage = "Le prix doit être strictement positif.")]
         public decimal InitialPrice { get; set; }
+        
+        public Guid? SupplierId { get; set; }
     }
 }

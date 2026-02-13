@@ -1,7 +1,7 @@
 using System;
 using AdvancedDevSample.Application.DTOs;
 using AdvancedDevSample.Domain.Exceptions;
-using AdvancedDevSample.Domain.Services;
+using AdvancedDevSample.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdvancedDevSample.Api.Controllers

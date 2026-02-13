@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AdvancedDevSample.Application\AdvancedDevSample.Application.csproj" />
-    <ProjectReference Include="..\AdvancedDevSampleDomain\AdvancedDevSample.Domain.csproj" />
+    <ProjectReference Include="..\AdvancedDevSample.Domain\AdvancedDevSample.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

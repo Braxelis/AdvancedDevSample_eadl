@@ -17,12 +17,14 @@ namespace AdvancedDevSample.Application.DTOs
         public string Status { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public decimal Total { get; set; }
+        public Guid? CustomerId { get; set; }
         public IReadOnlyList<OrderLineDto> Lines { get; set; } = Array.Empty<OrderLineDto>();
     }
 
     public class CreateOrderRequest
     {
         // Pour l'instant, on crée une commande vide (pas de champs nécessaires).
+        public Guid? CustomerId { get; set; }
     }
 
     public class AddOrderLineRequest
