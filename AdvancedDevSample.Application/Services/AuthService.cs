@@ -114,12 +114,11 @@ namespace AdvancedDevSample.Application.Services
             };
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S6781:JWT secret keys should not be disclosed", Justification = "Key is read from configuration, not hardcoded")]
         private string GenerateJwtToken(User user)
         {
-#pragma warning disable S6781 // JWT key is read from configuration, not hardcoded
             var key = _configuration["Jwt:Key"]
                      ?? throw new InvalidOperationException("JWT Key non configurée.");
-#pragma warning restore S6781
             var issuer = _configuration["Jwt:Issuer"];
             var audience = _configuration["Jwt:Audience"];
             var expiresInMinutes = int.Parse(_configuration["Jwt:ExpiresInMinutes"] ?? "60");
