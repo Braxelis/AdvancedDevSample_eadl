@@ -118,12 +118,10 @@ Quality Gate: ⏳ EN ATTENTE D'ANALYSE
 
 ### Historique
 
-```mermaid
-graph LR
-    A[Analyse initiale] -->|À venir| B[Première analyse]
-    B -->|Corrections| C[Analyse 2]
-    C -->|Améliorations| D[Analyse 3]
-```
+![Historique des analyses](images/Historique.jpg)
+
+Ce diagramme montre l'évolution prévue des analyses de qualité au fil du temps.
+
 
 ### Tendances
 

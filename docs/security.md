@@ -8,106 +8,29 @@ L'application utilise **JWT (JSON Web Tokens)** pour l'authentification et l'aut
 
 ## Architecture d'authentification
 
-```mermaid
-flowchart TD
-    A[Client] -->|POST /api/auth/register| B[AuthController]
-    A -->|POST /api/auth/login| B
-    B --> C[AuthService]
-    C --> D[UserRepository]
-    D --> E[(Base de données)]
-    C -->|Hash password| F[BCrypt]
-    C -->|Generate token| G[JWT Service]
-    G -->|Token| C
-    C -->|AuthResponse| B
-    B -->|200 OK + Token| A
-```
+![Architecture d'authentification JWT](images/security-architecture.jpg)
+
+L'architecture d'authentification repose sur JWT (JSON Web Tokens) pour sécuriser l'accès aux ressources de l'API.
 
 ## Flux d'authentification
 
-### 1. Inscription (Register)
+### Flux d'inscription
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant AuthController
-    participant AuthService
-    participant BCrypt
-    participant UserRepo
-    
-    Client->>AuthController: POST /api/auth/register
-    Note over Client: {username, email, password}
-    
-    AuthController->>AuthService: Register(request)
-    AuthService->>UserRepo: GetByUsername(username)
-    UserRepo-->>AuthService: null (user doesn't exist)
-    
-    AuthService->>UserRepo: GetByEmail(email)
-    UserRepo-->>AuthService: null (email not used)
-    
-    AuthService->>BCrypt: HashPassword(password)
-    BCrypt-->>AuthService: passwordHash
-    
-    AuthService->>UserRepo: Add(new User)
-    UserRepo-->>AuthService: void
-    
-    AuthService->>AuthService: GenerateJwtToken(user)
-    AuthService-->>AuthController: AuthResponse
-    
-    AuthController-->>Client: 201 Created + Token
-```
+![Flux d'inscription](images/security-register-flow.jpg)
 
-### 2. Connexion (Login)
+Ce diagramme illustre le processus complet d'inscription d'un nouvel utilisateur avec validation et hashing du mot de passe.
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant AuthController
-    participant AuthService
-    participant BCrypt
-    participant UserRepo
-    participant JWT
-    
-    Client->>AuthController: POST /api/auth/login
-    Note over Client: {usernameOrEmail, password}
-    
-    AuthController->>AuthService: Login(request)
-    AuthService->>UserRepo: GetByUsername/Email
-    UserRepo-->>AuthService: User
-    
-    AuthService->>BCrypt: Verify(password, hash)
-    BCrypt-->>AuthService: true
-    
-    AuthService->>JWT: GenerateToken(user)
-    JWT-->>AuthService: token
-    
-    AuthService-->>AuthController: AuthResponse
-    AuthController-->>Client: 200 OK + Token
-```
+### Flux de connexion
 
-### 3. Accès aux ressources protégées
+![Flux de connexion](images/security-login-flow.jpg)
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Middleware
-    participant Controller
-    participant Service
-    
-    Client->>Middleware: GET /api/products
-    Note over Client: Authorization: Bearer {token}
-    
-    Middleware->>Middleware: Validate JWT
-    Middleware->>Middleware: Extract claims
-    
-    alt Token valide
-        Middleware->>Controller: Request + User claims
-        Controller->>Service: GetAll()
-        Service-->>Controller: Products
-        Controller-->>Client: 200 OK + Data
-    else Token invalide
-        Middleware-->>Client: 401 Unauthorized
-    end
-```
+Ce diagramme montre le processus d'authentification avec vérification du mot de passe et génération du token JWT.
+
+### Accès aux ressources protégées
+
+![Accès aux ressources protégées](images/security-protected-access.jpg)
+
+Ce diagramme illustre comment le middleware JWT valide les tokens pour protéger l'accès aux ressources.
 
 ## Endpoints d'authentification
 

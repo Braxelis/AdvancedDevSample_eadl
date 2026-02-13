@@ -274,16 +274,9 @@ curl -X POST "http://localhost:5069/api/orders/5fa85f64-5717-4562-b3fc-2c963f66a
 
 ## Cycle de vie d'une commande
 
-```mermaid
-stateDiagram-v2
-    [*] --> Draft: Créer commande
-    Draft --> Draft: Ajouter/Modifier/Supprimer lignes
-    Draft --> Confirmed: Confirmer
-    Draft --> Cancelled: Annuler
-    Confirmed --> Cancelled: Annuler
-    Cancelled --> [*]
-    Confirmed --> [*]
-```
+![Cycle de vie d'une commande](../images/Cycle%20de%20vie%20d'une%20commande.jpg)
+
+Ce diagramme illustre les différents états d'une commande et les transitions possibles entre ces états.
 
 ### États possibles
 

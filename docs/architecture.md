@@ -75,61 +75,15 @@ AdvancedDevSample suit une **architecture en couches** basée sur les principes 
 
 ## Flux de données
 
-```mermaid
-flowchart TD
-    A[HTTP Request] --> B[Controller API]
-    B --> C[Service Application]
-    C --> D[Repository Interface Domain]
-    D --> E[Repository Implementation Infrastructure]
-    E --> F[In-Memory Storage]
-    F --> E
-    E --> D
-    D --> C
-    C --> B
-    B --> G[HTTP Response]
-```
+![Flux de données dans l'architecture](images/architecture-data-flow.jpg)
+
+Ce diagramme montre le flux de données à travers les différentes couches de l'application, du client HTTP jusqu'à la base de données.
 
 ## Diagramme de séquence - Création d'une commande
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant OrdersController
-    participant OrderService
-    participant ProductService
-    participant OrderRepo
-    participant ProductRepo
-    
-    Client->>OrdersController: POST /api/orders
-    OrdersController->>OrderService: Create(request)
-    OrderService->>OrderRepo: Add(order)
-    OrderRepo-->>OrderService: void
-    OrderService-->>OrdersController: OrderDto
-    OrdersController-->>Client: 201 Created
-    
-    Client->>OrdersController: POST /api/orders/{id}/lines
-    OrdersController->>OrderService: AddLine(orderId, request)
-    OrderService->>OrderRepo: GetById(orderId)
-    OrderRepo-->>OrderService: Order
-    OrderService->>ProductService: GetById(productId)
-    ProductService->>ProductRepo: GetById(productId)
-    ProductRepo-->>ProductService: Product
-    ProductService-->>OrderService: ProductDto
-    OrderService->>OrderRepo: Save(order)
-    OrderRepo-->>OrderService: void
-    OrderService-->>OrdersController: void
-    OrdersController-->>Client: 204 No Content
-    
-    Client->>OrdersController: POST /api/orders/{id}/confirm
-    OrdersController->>OrderService: Confirm(orderId)
-    OrderService->>OrderRepo: GetById(orderId)
-    OrderRepo-->>OrderService: Order
-    Note over OrderService: order.Confirm()
-    OrderService->>OrderRepo: Save(order)
-    OrderRepo-->>OrderService: void
-    OrderService-->>OrdersController: void
-    OrdersController-->>Client: 204 No Content
-```
+![Diagramme de séquence - Création de commande](images/architecture-sequence-diagram.jpg)
+
+Ce diagramme de séquence illustre le processus complet de création d'une commande, montrant les interactions entre les différentes couches.
 
 ## Principes DDD appliqués
 
